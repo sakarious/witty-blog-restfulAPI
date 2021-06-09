@@ -4,7 +4,7 @@
   "description": "A Simple RESTFUL  Blog API",
   "main": "index.js",
   "scripts": {
-    "dev": "npm run dev",
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Oluwasegun Ajayi 'Sakarious'",
