@@ -52,7 +52,7 @@ router.get("/:postID/:commentID", (req, res) => {
 router.put("/:postID/:commentID", (req, res) => {
   const postID = req.params.postID;
   const commentID = req.params.commentID;
-  res.send(`Edit comment ${commentID} on ${postID}`);
+  res.send(`Edit comment ${commentID} on post ${postID}`);
 });
 
 //Delete a comment on a Blog Post
