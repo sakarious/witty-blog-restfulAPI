@@ -141,4 +141,130 @@ module.exports = class blogController {
       });
     }
   }
+
+  //Add Comment to Post
+  static async addComment(req, res) {
+    try {
+      // const { error, isValid } = validation.validatePostProperties(req.body);
+
+      // if (!isValid) {
+      //   return res
+      //     .status(400)
+      //     .json({ code: 400, message: error.description, error: true });
+      // }
+
+      // if (isValid) {
+      let id = req.params.postID;
+      let username = req.body.username;
+      let comment = req.body.comment;
+
+      // const { error, isValid } = validation.createPost(author, title, content);
+
+      // if (!isValid) {
+      //   return res
+      //     .status(400)
+      //     .json({ code: 400, message: error.description, error: true });
+      // }
+
+      let response = await blog.addComment(id, username, comment);
+
+      res.status(201).json({ code: "SUCCESS", data: response, error: null });
+      // }
+    } catch (err) {
+      res.status(500).json({
+        code: 500,
+        message: "Failed",
+        error: err.message || "You cannot add a comment at the moment",
+      });
+    }
+  }
+
+  //Get a comment on a blog post
+  static async getComment(req, res) {
+    try {
+      let postID = req.params.postID;
+      let commentID = req.params.commentID;
+
+      let response = await blog.getComment(postID, commentID);
+      if (response) {
+        res
+          .status(200)
+          .json({ code: "SUCCESS", success: response, error: null });
+      } else {
+        res.status(404).json({
+          code: "404",
+          success: "Post not found",
+          error: "Post not found in database",
+        });
+      }
+    } catch (err) {
+      res.status(500).json({
+        code: 500,
+        message: "Failed",
+        error: err.message || "You cannot add a comment at the moment",
+      });
+    }
+  }
+
+  //Edit comment on a blog post
+  static async editComment(req, res) {
+    try {
+      let postID = req.params.postID;
+      let commentID = req.params.commentID;
+
+      let username = req.body.username;
+      let comment = req.body.comment;
+
+      let response = await blog.editComment(
+        postID,
+        commentID,
+        username,
+        comment
+      );
+      if (response) {
+        res
+          .status(200)
+          .json({ code: "SUCCESS", success: response, error: null });
+      } else {
+        res.status(404).json({
+          code: "404",
+          success: "Post not found",
+          error: "Post not found in database",
+        });
+      }
+    } catch (err) {
+      res.status(500).json({
+        code: 500,
+        message: "Failed",
+        error: err.message || "You cannot add a comment at the moment",
+      });
+    }
+  }
+
+  //Delete comment on a blog post
+  static async deleteComment(req, res) {
+    try {
+      let postID = req.params.postID;
+      let commentID = req.params.commentID;
+
+      let response = await blog.deleteComment(postID, commentID);
+      if (response) {
+        res
+          .status(200)
+          .json({ code: "SUCCESS", success: response, error: null });
+      } else {
+        res.status(404).json({
+          code: "404",
+          success: "Post not found",
+          error: "Post not found in database",
+        });
+      }
+    } catch (err) {
+      res.status(500).json({
+        code: 500,
+        message: "Failed",
+        error: err.message || "You cannot add a comment at the moment",
+      });
+    }
+  }
 };

@@ -2,8 +2,14 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const commentSchema = Schema({
-  username: String,
-  comment: String,
+  username: {
+    type: String,
+    required: true,
+  },
+  comment: {
+    type: String,
+    required: true,
+  },
   Date: {
     type: Date,
     default: Date.now,

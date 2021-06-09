@@ -86,4 +86,78 @@ module.exports = class blogServices {
       console.log(err.message);
     }
   }
+
+  //Add Comment to Post
+  static async addComment(id, username, comment) {
+    try {
+      let postComment = await new commentModel({
+        username,
+        comment,
+      });
+
+      //Save Comment to comment collection
+      let newComment = await postComment.save();
+      //Add to post
+      let response = await postModel.findByIdAndUpdate(
+        id,
+        { $push: { comments: postComment } },
+        { new: true }
+      );
+      return response;
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
+  //Get a comment on a blog post
+  static async getComment(postId, commentId) {
+    try {
+      let response = await postModel.findOne(
+        { _id: postId },
+        {
+          comments: { $elemMatch: { _id: commentId } },
+        }
+      );
+      return response;
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
+  //Edit a comment
+  static async editComment(postId, commentId, username, comment) {
+    try {
+      let response = await postModel.findOneAndUpdate(
+        { _id: postId, "comments._id": commentId },
+        {
+          $set: {
+            "comments.$.username": username,
+            "comments.$.comment": comment,
+          },
+        },
+        { new: true }
+      );
+      return response;
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
+
+  //Delete Comment
+  static async deleteComment(postId, commentId) {
+    try {
+      let response = await postModel.findOneAndUpdate(
+        { _id: postId },
+        {
+          $pull: {
+            comments: { _id: commentId },
+          },
+        },
+        { new: true }
+      );
+      return response;
+    } catch (err) {
+      console.log(err.message);
+    }
+  }
 };
