@@ -1,32 +1,30 @@
 const express = require("express");
 const router = express.Router();
+const Blog = require("../controller/blogController");
 
 //Get all Blog Posts. Takes care of pagination too
 router.get("/", (req, res) => {
-  res.send("Blog API");
+  Blog.getAllPosts(req, res);
 });
 
 //Get Post by ID
 router.get("/:id", (req, res) => {
-  const id = req.params.id;
-  res.send(`Get blog post with id ${id}`);
+  Blog.getPostById(req, res);
 });
 
 //Create Blog Post
 router.post("/", (req, res) => {
-  res.send("Create New Post");
+  Blog.createPost(req, res);
 });
 
 //Update Blog Post
 router.put("/:id", (req, res) => {
-  const id = req.params.id;
-  res.send(`Update post ${id}`);
+  Blog.updatePost(req, res);
 });
 
 //Delete Blog Post
 router.delete("/:id", (req, res) => {
-  const id = req.params.id;
-  res.send(`Delete blog post with id ${id}`);
+  Blog.deletePost(req, res);
 });
 
 //Add Comment to Blog Post
