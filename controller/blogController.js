@@ -4,6 +4,7 @@ const blog = require("../services/blog");
 const validation = require("../validations");
 
 module.exports = class blogController {
+  //Create new post
   static async createPost(req, res) {
     try {
       const { error, isValid } = validation.validatePostProperties(req.body);

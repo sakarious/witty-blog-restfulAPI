@@ -27,14 +27,13 @@ module.exports = class Validation {
       error.description = "Author Name, Title or content cannot be empty";
     }
 
-    // if (
-    //   validator.isByteLength(author, { min: 5, max: 5 })
-    //   //validator.isLength(title, { min: 4, max: 100 })
-    //   //validator.isLength(content, { min: 4, max: 100 })
-    // ) {
-    //   error.description =
-    //     "A valid Author Name, Title or Content has to be between 4 and 100 Characters";
-    // }
+    if (
+      author.trim().length() < 4 ||
+      title.trim().length() < 4 ||
+      content.trim().length() < 4
+    ) {
+      error.description = "Author Name, Title or content cannot be empty";
+    }
 
     if (
       validator.isNumeric(author) ||
