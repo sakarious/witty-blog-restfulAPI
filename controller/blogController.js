@@ -40,6 +40,15 @@ module.exports = class blogController {
         //If validation passes, send fields to services to create new post and await the response since services returns a promise
         let response = await blog.createPost(author, title, content);
 
+        //If not successful, send json response
+        if (response == false) {
+          return res.status(500).json({
+            code: 500,
+            message: "Failed",
+            error: "You cannot create a Post at the moment",
+          });
+        }
+
         //Get response and send json response
         res.status(201).json({
           code: 201,
@@ -49,10 +58,12 @@ module.exports = class blogController {
         });
       }
     } catch (err) {
+      //If theres an error, log error to file and return json response
+      logger.info(`Controller: Error occured in creating post, ${err.message}`);
       res.status(500).json({
         code: 500,
         message: "Failed",
-        error: err.message || "You cannot create a Post at the moment",
+        error: "You cannot create a post at the moment",
       });
     }
   }
@@ -64,12 +75,25 @@ module.exports = class blogController {
 
       let response = await blog.getAllPosts(page, limit);
 
+      //If not successful, send json response
+      if (response == false) {
+        return res.status(500).json({
+          code: 500,
+          message: "Failed",
+          error: "You cannot get all posts at the moment",
+        });
+      }
+
       res.status(200).json({ code: "SUCCESS", success: response, error: null });
     } catch (err) {
+      //If theres an error, log error to file and return json response
+      logger.info(
+        `Controller: Error occured in getting all post, ${err.message}`
+      );
       res.status(500).json({
         code: 500,
         message: "Failed",
-        error: err.message || "You cannot get all todos at the moment",
+        error: "You cannot get all posts at the moment",
       });
     }
   }
@@ -78,6 +102,7 @@ module.exports = class blogController {
     try {
       let id = req.params.id;
       let response = await blog.getPostById(id);
+
       if (response) {
         res
           .status(200)
@@ -90,10 +115,12 @@ module.exports = class blogController {
         });
       }
     } catch (err) {
+      //If theres an error, log error to file and return json response
+      logger.info(`Controller: Error occured in getting post, ${err.message}`);
       res.status(500).json({
         code: 500,
         message: "Failed",
-        error: err.message || "ooopsss... Something terribly went wrong",
+        error: "You cannot get post at the moment",
       });
     }
   }
@@ -107,7 +134,7 @@ module.exports = class blogController {
       let title = req.body.title;
       let content = req.body.content;
 
-      let response = await blog.updateTodo(id, title, content);
+      let response = await blog.updatePost(id, title, content);
       if (response) {
         res
           .status(200)
@@ -120,10 +147,12 @@ module.exports = class blogController {
         });
       }
     } catch (err) {
+      //If theres an error, log error to file and return json response
+      logger.info(`Controller: Error occured in updating post, ${err.message}`);
       res.status(500).json({
         code: 500,
         message: "Failed",
-        error: err.message || "ooopsss... Something terribly went wrong",
+        error: "You cannot update post at the moment",
       });
     }
   }
@@ -147,10 +176,12 @@ module.exports = class blogController {
         });
       }
     } catch (err) {
+      //If theres an error, log error to file and return json response
+      logger.info(`Controller: Error occured in deleting post, ${err.message}`);
       res.status(500).json({
         code: 500,
         message: "Failed",
-        error: err.message || "ooopsss... Something terribly went wrong",
+        error: "You cannot delete post at the moment",
       });
     }
   }
@@ -181,9 +212,22 @@ module.exports = class blogController {
 
       let response = await blog.addComment(id, username, comment);
 
+      //If not successful, send json response
+      if (response == false) {
+        return res.status(500).json({
+          code: 500,
+          message: "Failed",
+          error: "You cannot add a comment at the moment",
+        });
+      }
+
       res.status(201).json({ code: "SUCCESS", data: response, error: null });
       // }
     } catch (err) {
+      //If theres an error, log error to file and return json response
+      logger.info(
+        `Controller: Error occured in adding a post comment, ${err.message}`
+      );
       res.status(500).json({
         code: 500,
         message: "Failed",
@@ -211,10 +255,14 @@ module.exports = class blogController {
         });
       }
     } catch (err) {
+      //If theres an error, log error to file and return json response
+      logger.info(
+        `Controller: Error occured in getting a post comment, ${err.message}`
+      );
       res.status(500).json({
         code: 500,
         message: "Failed",
-        error: err.message || "You cannot add a comment at the moment",
+        error: err.message || "You cannot get comment at the moment",
       });
     }
   }
@@ -246,10 +294,14 @@ module.exports = class blogController {
         });
       }
     } catch (err) {
+      //If theres an error, log error to file and return json response
+      logger.info(
+        `Controller: Error occured when editing post comment, ${err.message}`
+      );
       res.status(500).json({
         code: 500,
         message: "Failed",
-        error: err.message || "You cannot add a comment at the moment",
+        error: err.message || "You cannot edit comment at the moment",
       });
     }
   }
@@ -273,10 +325,14 @@ module.exports = class blogController {
         });
       }
     } catch (err) {
+      //If theres an error, log error to file and return json response
+      logger.info(
+        `Controller: Error occured in deleting post comment, ${err.message}`
+      );
       res.status(500).json({
         code: 500,
         message: "Failed",
-        error: err.message || "You cannot add a comment at the moment",
+        error: err.message || "You cannot delete comment at the moment",
       });
     }
   }

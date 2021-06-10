@@ -9,7 +9,6 @@ module.exports = class blogServices {
   // Create new Post
   static async createPost(author, title, content) {
     try {
-      logger;
       //Create new document
       let newPost = await new postModel({
         author,
@@ -23,7 +22,7 @@ module.exports = class blogServices {
       return response;
     } catch (err) {
       //If theres an error, log error to file and return false to controller
-      logger.info(`Error occured in creating post, ${err.message}`);
+      logger.info(`Services: Error occured in creating post, ${err.message}`);
       return false;
     }
   }
@@ -69,7 +68,7 @@ module.exports = class blogServices {
     } catch (err) {
       //If theres an error, log error to file and return false to controller
       logger.info(
-        `Error occured in getting all posts or pagination, ${err.message}`
+        `Services: Error occured in getting all posts or pagination, ${err.message}`
       );
       return false;
     }
@@ -84,13 +83,15 @@ module.exports = class blogServices {
       return response;
     } catch (err) {
       //If theres an error, log error to file and return false to controller
-      logger.info(`Error occured in getting post bt id, ${err.message}`);
+      logger.info(
+        `Services: Error occured in getting post bt id, ${err.message}`
+      );
       return false;
     }
   }
 
   // Update a todo
-  static async updateTodo(id, title, content) {
+  static async updatePost(id, title, content) {
     try {
       //Get id, title and content to be updated and send to database
       let response = await postModel.findByIdAndUpdate(
@@ -102,7 +103,7 @@ module.exports = class blogServices {
       return response;
     } catch (err) {
       //If theres an error, log error to file and return false to controller
-      logger.info(`Error occured in updating post, ${err.message}`);
+      logger.info(`Services: Error occured in updating post, ${err.message}`);
       return false;
     }
   }
@@ -116,7 +117,7 @@ module.exports = class blogServices {
       return response;
     } catch (err) {
       //If theres an error, log error to file and return false to controller
-      logger.info(`Error occured in deleting post, ${err.message}`);
+      logger.info(`Services: Error occured in deleting post, ${err.message}`);
       return false;
     }
   }
@@ -142,7 +143,9 @@ module.exports = class blogServices {
       return response;
     } catch (err) {
       //If theres an error, log error to file and return false to controller
-      logger.info(`Error occured in adding comment to post, ${err.message}`);
+      logger.info(
+        `Services: Error occured in adding comment to post, ${err.message}`
+      );
       return false;
     }
   }
@@ -161,7 +164,9 @@ module.exports = class blogServices {
       return response;
     } catch (err) {
       //If theres an error, log error to file and return false to controller
-      logger.info(`Error occured in getting a post comment, ${err.message}`);
+      logger.info(
+        `Services: Error occured in getting a post comment, ${err.message}`
+      );
       return false;
     }
   }
@@ -184,7 +189,9 @@ module.exports = class blogServices {
       return response;
     } catch (err) {
       //If theres an error, log error to file and return false to controller
-      logger.info(`Error occured in editing post comment, ${err.message}`);
+      logger.info(
+        `Services: Error occured in editing post comment, ${err.message}`
+      );
       return false;
     }
   }
@@ -206,7 +213,9 @@ module.exports = class blogServices {
       return response;
     } catch (err) {
       //If theres an error, log error to file and return false to controller
-      logger.info(`Error occured in deleting post comment, ${err.message}`);
+      logger.info(
+        `Services: Error occured in deleting post comment, ${err.message}`
+      );
       return false;
     }
   }
