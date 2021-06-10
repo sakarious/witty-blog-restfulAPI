@@ -44,8 +44,8 @@ module.exports = class blogController {
         if (response == false) {
           return res.status(500).json({
             code: 500,
-            message: "Failed",
-            error: "You cannot create a Post at the moment",
+            status: "Failed",
+            message: "You cannot create a Post at the moment",
           });
         }
 
@@ -62,56 +62,90 @@ module.exports = class blogController {
       logger.info(`Controller: Error occured in creating post, ${err.message}`);
       res.status(500).json({
         code: 500,
-        message: "Failed",
-        error: "You cannot create a post at the moment",
+        status: "Failed",
+        message: "You cannot create a post at the moment",
       });
     }
   }
 
   static async getAllPosts(req, res) {
     try {
+      if (req.query) {
+        // Check if query object has page and limit
+        const { error, isValid } = validation.validateQueryObject(req.query);
+
+        //If validation fails, send error to user
+        if (!isValid) {
+          return res
+            .status(400)
+            .json({ code: 400, message: error.description, error: true });
+        }
+
+        if (isValid) {
+          //After first validation passes, Validate page and limit are integers
+          const { error, isValid } = validation.validateQueryParams(
+            req.query.page,
+            req.query.limit
+          );
+          //If validation fails, send error to user
+          if (!isValid) {
+            return res
+              .status(400)
+              .json({ code: 400, message: error.description, error: true });
+          }
+        }
+      }
+      //Check if there's a page or limit query. If there isn't, assign null to page and limit but if there is, change type of page and limit to Number
       let page = req.query.page ? parseInt(req.query.page) : null;
       let limit = req.query.limit ? parseInt(req.query.limit) : null;
 
+      //Send to services and await response
       let response = await blog.getAllPosts(page, limit);
 
       //If not successful, send json response
       if (response == false) {
         return res.status(500).json({
           code: 500,
-          message: "Failed",
-          error: "You cannot get all posts at the moment",
+          status: "Failed",
+          message: "You cannot get all posts at the moment",
         });
       }
 
-      res.status(200).json({ code: "SUCCESS", success: response, error: null });
+      //If successful, send json response
+      res
+        .status(200)
+        .json({ code: 200, status: "Success", data: response, error: null });
     } catch (err) {
       //If theres an error, log error to file and return json response
       logger.info(
-        `Controller: Error occured in getting all post, ${err.message}`
+        `Controller: Error occured in getting all post or pagination, ${err.message}`
       );
       res.status(500).json({
         code: 500,
-        message: "Failed",
-        error: "You cannot get all posts at the moment",
+        status: "Failed",
+        Message: "You cannot get all posts at the moment",
       });
     }
   }
 
   static async getPostById(req, res) {
     try {
+      // Get ID from request parameters
       let id = req.params.id;
+
+      //Send to services and await response
       let response = await blog.getPostById(id);
 
+      //If theres a match, send json response
       if (response) {
         res
           .status(200)
-          .json({ code: "SUCCESS", success: response, error: null });
+          .json({ code: 200, status: "Success", data: response, error: null });
       } else {
         res.status(404).json({
           code: "404",
-          success: "Post not found",
-          error: "Post not found in database",
+          status: "Post not found",
+          message: "Post not found in database",
         });
       }
     } catch (err) {
@@ -128,22 +162,51 @@ module.exports = class blogController {
   //Update Blog Post
   static async updatePost(req, res) {
     try {
-      //validate req body field to contain title and content
-      //Make sure title and content isnt empty
+      //Validation: Checks to see if required fields can be found in request body object
+      const { error, isValid } = validation.validatePostUpdateProperties(
+        req.body
+      );
+
+      //If validation fails, send response to user
+      if (!isValid) {
+        return res
+          .status(400)
+          .json({ code: 400, message: error.description, error: true });
+      }
+
+      //If first validation passes, check for second validation
+      if (isValid) {
+        const { error, isValid } = validation.PostUpdate(
+          req.body.title,
+          req.body.content
+        );
+
+        //If validation fails, send response to user
+        if (!isValid) {
+          return res
+            .status(400)
+            .json({ code: 400, message: error.description, error: true });
+        }
+      }
+
+      //Get post Id from request parameter and validated title, content from req body
       let id = req.params.id;
       let title = req.body.title;
       let content = req.body.content;
 
+      //Send to services for processing and await response
       let response = await blog.updatePost(id, title, content);
+      //If response is successful, send json response
       if (response) {
         res
           .status(200)
-          .json({ code: "SUCCESS", success: response, error: null });
+          .json({ code: 200, status: "Success", data: response, error: null });
       } else {
+        //Post to be edited not found
         res.status(404).json({
           code: "404",
-          success: "Post not found",
-          error: "Post not found in database",
+          status: "Post not found",
+          message: "Post not found in database",
         });
       }
     } catch (err) {
@@ -151,8 +214,8 @@ module.exports = class blogController {
       logger.info(`Controller: Error occured in updating post, ${err.message}`);
       res.status(500).json({
         code: 500,
-        message: "Failed",
-        error: "You cannot update post at the moment",
+        status: "Failed",
+        message: "You cannot update post at the moment",
       });
     }
   }
@@ -160,19 +223,24 @@ module.exports = class blogController {
   //Delete Blog Post
   static async deletePost(req, res) {
     try {
+      //Get ID from request parameter
       let id = req.params.id;
+      //Send to services and wait for response
       let response = await blog.deletePost(id);
+      //If successful, send json response
       if (response) {
         res.status(200).json({
-          code: "SUCCESSFULLY DELETED",
-          success: response,
+          code: 200,
+          status: "Success",
+          data: response,
           error: null,
         });
       } else {
+        //Operation not successful. Return json response
         res.status(404).json({
-          code: "404",
-          success: "Post not found",
-          error: "Post not found in database",
+          code: 404,
+          error: "Post not found",
+          message: "Post not found in database",
         });
       }
     } catch (err) {
@@ -189,40 +257,48 @@ module.exports = class blogController {
   //Add Comment to Post
   static async addComment(req, res) {
     try {
-      // const { error, isValid } = validation.validatePostProperties(req.body);
+      //Validation: Checks to see if required fields can be found in request body object
+      const { error, isValid } = validation.validateCommentProperties(req.body);
 
-      // if (!isValid) {
-      //   return res
-      //     .status(400)
-      //     .json({ code: 400, message: error.description, error: true });
-      // }
-
-      // if (isValid) {
-      let id = req.params.postID;
-      let username = req.body.username;
-      let comment = req.body.comment;
-
-      // const { error, isValid } = validation.createPost(author, title, content);
-
-      // if (!isValid) {
-      //   return res
-      //     .status(400)
-      //     .json({ code: 400, message: error.description, error: true });
-      // }
-
-      let response = await blog.addComment(id, username, comment);
-
-      //If not successful, send json response
-      if (response == false) {
-        return res.status(500).json({
-          code: 500,
-          message: "Failed",
-          error: "You cannot add a comment at the moment",
-        });
+      if (!isValid) {
+        return res
+          .status(400)
+          .json({ code: 400, message: error.description, error: true });
       }
 
-      res.status(201).json({ code: "SUCCESS", data: response, error: null });
-      // }
+      //If first check passes, Validate fields
+      if (isValid) {
+        //Get id from request parameter, username and comment from request body
+        let id = req.params.postID;
+        let username = req.body.username;
+        let comment = req.body.comment;
+
+        //Validate username and comment
+        const { error, isValid } = validation.addComment(username, comment);
+
+        //if not valid, send json response
+        if (!isValid) {
+          return res
+            .status(400)
+            .json({ code: 400, message: error.description, error: true });
+        }
+
+        //Send to services and await response
+        let response = await blog.addComment(id, username, comment);
+
+        //If not successful, send json response
+        if (response == false) {
+          return res.status(500).json({
+            code: 500,
+            status: "Failed",
+            message: "You cannot add a comment at the moment",
+          });
+        }
+
+        res
+          .status(201)
+          .json({ code: 201, status: "Success", data: response, error: null });
+      }
     } catch (err) {
       //If theres an error, log error to file and return json response
       logger.info(
@@ -239,19 +315,24 @@ module.exports = class blogController {
   //Get a comment on a blog post
   static async getComment(req, res) {
     try {
+      //Get postid and commentid from request parameter
       let postID = req.params.postID;
       let commentID = req.params.commentID;
 
+      //Send to services and wait for response
       let response = await blog.getComment(postID, commentID);
+
+      //If comment foud, send success json response
       if (response) {
         res
           .status(200)
-          .json({ code: "SUCCESS", success: response, error: null });
+          .json({ code: 200, status: "Success", data: response, error: null });
       } else {
+        //If no comment found, send json response
         res.status(404).json({
-          code: "404",
-          success: "Post not found",
-          error: "Post not found in database",
+          code: 404,
+          status: "Post not found",
+          message: "Post not found in database",
         });
       }
     } catch (err) {
@@ -270,27 +351,56 @@ module.exports = class blogController {
   //Edit comment on a blog post
   static async editComment(req, res) {
     try {
+      //Validate request body.
+      const { error, isValid } = validation.validateCommentProperties(req.body);
+
+      //If validation fails, return json response
+      if (!isValid) {
+        return res
+          .status(400)
+          .json({ code: 400, message: error.description, error: true });
+      }
+
+      //If first vaidation passes, validate fields
+      if (isValid) {
+        const { error, isValid } = validation.addComment(
+          req.body.username,
+          req.body.comment
+        );
+
+        //If validation fails, return response
+        if (!isValid) {
+          return res
+            .status(400)
+            .json({ code: 400, message: error.description, error: true });
+        }
+      }
+      //If all validation passes, get postID, commentID from request parameters and username, comment from request body
       let postID = req.params.postID;
       let commentID = req.params.commentID;
 
       let username = req.body.username;
       let comment = req.body.comment;
 
+      //Send to services and await response
       let response = await blog.editComment(
         postID,
         commentID,
         username,
         comment
       );
+
+      //if found, return json respons
       if (response) {
         res
           .status(200)
-          .json({ code: "SUCCESS", success: response, error: null });
+          .json({ code: 200, status: "Success", data: response, error: null });
       } else {
+        //If comment not found
         res.status(404).json({
-          code: "404",
-          success: "Post not found",
-          error: "Post not found in database",
+          code: 404,
+          status: "Post not found",
+          message: "Post not found in database",
         });
       }
     } catch (err) {
@@ -309,19 +419,24 @@ module.exports = class blogController {
   //Delete comment on a blog post
   static async deleteComment(req, res) {
     try {
+      //Get PostID and Comment ID from request parameter
       let postID = req.params.postID;
       let commentID = req.params.commentID;
 
+      //Send to services and await response
       let response = await blog.deleteComment(postID, commentID);
+
+      //If comment found and deleted successfully
       if (response) {
         res
           .status(200)
-          .json({ code: "SUCCESS", success: response, error: null });
+          .json({ code: 200, status: "Success", data: response, error: null });
       } else {
+        //If comment not found
         res.status(404).json({
-          code: "404",
-          success: "Post not found",
-          error: "Post not found in database",
+          code: 404,
+          status: "Post not found",
+          message: "Post not found in database",
         });
       }
     } catch (err) {
