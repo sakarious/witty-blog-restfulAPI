@@ -3,7 +3,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const routes = require("./routes");
 const middlewares = require("./middlewares");
-const DBconnect = require("./database");
+const DBconnect = require("./configs/database");
+const logger = require("./configs/logger");
 
 //Setup Middlewares
 middlewares(app);
@@ -12,5 +13,5 @@ middlewares(app);
 routes(app);
 
 app.listen(PORT, () => {
-  console.log("Server is listening on", PORT);
+  logger.info(`Server is listening on port ${PORT}`);
 });

@@ -7,34 +7,47 @@ module.exports = class blogController {
   //Create new post
   static async createPost(req, res) {
     try {
+      //Validation: Checks to see if required fields can be found in request body object
       const { error, isValid } = validation.validatePostProperties(req.body);
 
+      //If validation fails, send response to user
       if (!isValid) {
         return res
           .status(400)
           .json({ code: 400, message: error.description, error: true });
       }
 
+      //Validation: If first validation passes, validate author, title and content.
       if (isValid) {
         let author = req.body.author;
         let title = req.body.title;
         let content = req.body.content;
 
+        //Validation: validate author,title and content fields
         const { error, isValid } = validation.createPost(
           author,
           title,
           content
         );
 
+        //If validation fails, send response to user
         if (!isValid) {
           return res
             .status(400)
             .json({ code: 400, message: error.description, error: true });
         }
-
+        //If validation passes, send fields to services to create new post and await the response since services returns a promise
         let response = await blog.createPost(author, title, content);
 
-        res.status(201).json({ code: "SUCCESS", data: response, error: null });
+        //Get response
+        res
+          .status(201)
+          .json({
+            code: 201,
+            status: "New Post Created Successfully",
+            data: response,
+            error: null,
+          });
       }
     } catch (err) {
       res.status(500).json({

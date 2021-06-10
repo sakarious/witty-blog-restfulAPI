@@ -28,11 +28,12 @@ module.exports = class Validation {
     }
 
     if (
-      author.trim().length() < 4 ||
-      title.trim().length() < 4 ||
-      content.trim().length() < 4
+      author.trim().length < 4 ||
+      title.trim().length < 4 ||
+      content.trim().length < 4
     ) {
-      error.description = "Author Name, Title or content cannot be empty";
+      error.description =
+        "Author Name, Title or content cannot less than 4 characters";
     }
 
     if (
