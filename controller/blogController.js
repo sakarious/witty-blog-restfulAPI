@@ -1,3 +1,4 @@
+const logger = require("../logger");
 //Blog Services
 const blog = require("../services/blog");
 //Validation
@@ -39,15 +40,13 @@ module.exports = class blogController {
         //If validation passes, send fields to services to create new post and await the response since services returns a promise
         let response = await blog.createPost(author, title, content);
 
-        //Get response
-        res
-          .status(201)
-          .json({
-            code: 201,
-            status: "New Post Created Successfully",
-            data: response,
-            error: null,
-          });
+        //Get response and send json response
+        res.status(201).json({
+          code: 201,
+          status: "New Post Created Successfully",
+          data: response,
+          error: null,
+        });
       }
     } catch (err) {
       res.status(500).json({

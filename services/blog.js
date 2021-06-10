@@ -1,10 +1,15 @@
+//Import Post Schema
 const postModel = require("../models/post");
+//Import comment schema
 const { commentModel } = require("../models/comment");
+//Import Logger
+const logger = require("../logger");
 
 module.exports = class blogServices {
   // Create new Post
   static async createPost(author, title, content) {
     try {
+      logger;
       //Create new document
       let newPost = await new postModel({
         author,
@@ -17,7 +22,9 @@ module.exports = class blogServices {
       //Return response to controller
       return response;
     } catch (err) {
-      console.log(err.message);
+      //If theres an error, log error to file and return false to controller
+      logger.info(`Error occured in creating post, ${err.message}`);
+      return false;
     }
   }
   // Get all Posts
@@ -60,8 +67,11 @@ module.exports = class blogServices {
       //Return response to controller
       return docs;
     } catch (err) {
-      //Error handling
-      console.log(err.message);
+      //If theres an error, log error to file and return false to controller
+      logger.info(
+        `Error occured in getting all posts or pagination, ${err.message}`
+      );
+      return false;
     }
   }
   // Get a Post
@@ -73,7 +83,9 @@ module.exports = class blogServices {
       //Return response to controller
       return response;
     } catch (err) {
-      console.log(err.message);
+      //If theres an error, log error to file and return false to controller
+      logger.info(`Error occured in getting post bt id, ${err.message}`);
+      return false;
     }
   }
 
@@ -89,7 +101,9 @@ module.exports = class blogServices {
       //return response to controller
       return response;
     } catch (err) {
-      console.log(err.message);
+      //If theres an error, log error to file and return false to controller
+      logger.info(`Error occured in updating post, ${err.message}`);
+      return false;
     }
   }
 
@@ -101,7 +115,9 @@ module.exports = class blogServices {
       //Return response to controller
       return response;
     } catch (err) {
-      console.log(err.message);
+      //If theres an error, log error to file and return false to controller
+      logger.info(`Error occured in deleting post, ${err.message}`);
+      return false;
     }
   }
 
@@ -125,7 +141,9 @@ module.exports = class blogServices {
       //return response to the controller
       return response;
     } catch (err) {
-      console.log(err.message);
+      //If theres an error, log error to file and return false to controller
+      logger.info(`Error occured in adding comment to post, ${err.message}`);
+      return false;
     }
   }
 
@@ -142,7 +160,9 @@ module.exports = class blogServices {
       //return response to controller
       return response;
     } catch (err) {
-      console.log(err.message);
+      //If theres an error, log error to file and return false to controller
+      logger.info(`Error occured in getting a post comment, ${err.message}`);
+      return false;
     }
   }
 
@@ -163,7 +183,9 @@ module.exports = class blogServices {
       //return response to the controller
       return response;
     } catch (err) {
-      console.log(err.message);
+      //If theres an error, log error to file and return false to controller
+      logger.info(`Error occured in editing post comment, ${err.message}`);
+      return false;
     }
   }
 
@@ -183,7 +205,9 @@ module.exports = class blogServices {
       //return response to the controller
       return response;
     } catch (err) {
-      console.log(err.message);
+      //If theres an error, log error to file and return false to controller
+      logger.info(`Error occured in deleting post comment, ${err.message}`);
+      return false;
     }
   }
 };

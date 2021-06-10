@@ -1,6 +1,6 @@
 //MongoDB connection
 const mongoose = require("mongoose");
-const logger = require("./logger");
+const logger = require("../logger");
 
 mongoose.connect(
   process.env.MONGODB,
@@ -13,7 +13,6 @@ mongoose.connect(
   (err) => {
     if (err) {
       logger.info(`Connection to DB failed, ${err.message}`);
-      logger.error(`Connection to DB failed, ${err.message}`);
     } else {
       logger.info(`Connected to MongoDB successful`);
     }
