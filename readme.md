@@ -9,7 +9,9 @@
 To run this application, you'll need:
 
 - Node.js and
+
 - Node Package Manager (NPM), installed in your environment.
+
 - A MongoDB database
 
 ### Node
@@ -69,24 +71,35 @@ Create a .env file and put the following:
 ## Installation
 
 ```bash
+
 $ npm install
+
 ```
 
 ## Running the app
 
 ```bash
+
 # development
+
 $ npm run start
 
+
+
 # watch mode
+
 $ npm run dev
+
 ```
 
 ## Test
 
 ```bash
+
 # unit tests
+
 $ npm run test
+
 ```
 
 ## API Documentation
@@ -94,7 +107,9 @@ $ npm run test
 The API Documentation is present in the repository/project folder root directory. Kindly find a file with the name:
 
 ```
+
 API Documentation.md
+
 ```
 
 # PAY SPECIAL ATTENTION TO:
@@ -126,7 +141,8 @@ API Documentation.md
 I used the Model View Controller Architectural Pattern
 
 - Model View Controller (MVC)
-  Model View Controller is a software architectural pattern that involves the separation of the application logic into three interconnected elements the Model, View, and Controller.
+
+Model View Controller is a software architectural pattern that involves the separation of the application logic into three interconnected elements the Model, View, and Controller.
 
 I maintained Separation of Concern (SoC) technique. Separation of concerns (SoC) is a design principle for separating software applications into distinct sections such that each section addresses a separate concern. A concern is a set of information that affects the code of a Software Application.
 
@@ -135,19 +151,39 @@ I maintained Separation of Concern (SoC) technique. Separation of concerns (SoC)
 I tried to follow the following principles:
 
 - #### Don't Repeat Yourself (DRY) Principle
+
 - #### SOLID Principle. SOLID is an acronym for:
-  - **S**ingle Responsibility Principle
-  - **O**pen/Closed Principle
-  - **L**iskov Substitution Principle
-  - **I**nterface Segregation Principle
-  - **D**ependency Inversion
+
+- **S**ingle Responsibility Principle
+
+- **O**pen/Closed Principle
+
+- **L**iskov Substitution Principle
+
+- **I**nterface Segregation Principle
+
+- **D**ependency Inversion
+
 - #### “Keep it simple, Stupid!” (KISS) design principle.
+
+## Completeness
+
+I tried as much as possible to validate data/payloads.
 
 ## Code Structure.
 
 I used the Model-Routes-Controllers-Services Code Structure.
 
+# TO-DO:
+
+- Write more tests cases. I definitely didn't cover every scenario in my test. I hope I get to :)
+- Write more comments.
+- Optimize Code.
+- Consider Security
+- Give Better Description to success response. e.g "Post Update Successful" instead of "Success"
+
 ## Stay in touch
 
 - Author - [Oluwasegun Ajayi](https://github.com/sakarious)
+
 - Linkedin - [My profile](https://www.linkedin.com/in/oluwasegun-ajayi-0b16b0186/)
