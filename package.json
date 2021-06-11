@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "mocha 'tests/**/*.spec.js'"
+    "test": "mocha 'tests/**/*.spec.js' --exit"
   },
   "author": "Oluwasegun Ajayi 'Sakarious'",
   "license": "ISC",
@@ -21,6 +21,7 @@
   },
   "devDependencies": {
     "chai": "^4.3.4",
+    "chai-http": "^4.3.0",
     "mocha": "^9.0.0",
     "nodemon": "^2.0.7"
   }

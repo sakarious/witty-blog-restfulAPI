@@ -130,6 +130,19 @@ I used the Model View Controller Architectural Pattern
 
 I maintained Separation of Concern (SoC) technique. Separation of concerns (SoC) is a design principle for separating software applications into distinct sections such that each section addresses a separate concern. A concern is a set of information that affects the code of a Software Application.
 
+## Software Design Principles.
+
+I tried to follow the following principles:
+
+- #### Don't Repeat Yourself (DRY) Principle
+- #### SOLID Principle. SOLID is an acronym for:
+  - **S**ingle Responsibility Principle
+  - **O**pen/Closed Principle
+  - **L**iskov Substitution Principle
+  - **I**nterface Segregation Principle
+  - **D**ependency Inversion
+- #### “Keep it simple, Stupid!” (KISS) design principle.
+
 ## Code Structure.
 
 I used the Model-Routes-Controllers-Services Code Structure.

@@ -119,6 +119,7 @@ module.exports = class blogController {
       } else {
         res.status(200).json({
           code: 200,
+          data: response,
           status: "No Post in Database",
           message: "No Post in Database,Start Writing.",
         });
