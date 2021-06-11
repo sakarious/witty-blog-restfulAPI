@@ -1,11 +1,8 @@
 const express = require("express");
 const rateLimit = require("express-rate-limit");
-const helmet = require("helmet");
 require("dotenv").config();
 
 module.exports = (app) => {
-  app.use(helmet());
-
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
 

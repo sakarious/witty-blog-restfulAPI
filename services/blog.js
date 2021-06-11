@@ -21,9 +21,9 @@ module.exports = class blogServices {
       //Return response to controller
       return response;
     } catch (err) {
-      //If theres an error, log error to file and return false to controller
+      //If theres an error, log error to file and return 'false' to controller
       logger.info(`Services: Error occured in creating post, ${err.message}`);
-      return false;
+      return "false";
     }
   }
   // Get all Posts
@@ -66,11 +66,11 @@ module.exports = class blogServices {
       //Return response to controller
       return docs;
     } catch (err) {
-      //If theres an error, log error to file and return false to controller
+      //If theres an error, log error to file and return 'false' to controller
       logger.info(
         `Services: Error occured in getting all posts or pagination, ${err.message}`
       );
-      return false;
+      return "false";
     }
   }
   // Get a Post
@@ -82,11 +82,11 @@ module.exports = class blogServices {
       //Return response to controller
       return response;
     } catch (err) {
-      //If theres an error, log error to file and return false to controller
+      //If theres an error, log error to file and return 'false' to controller
       logger.info(
         `Services: Error occured in getting post bt id, ${err.message}`
       );
-      return false;
+      return "false";
     }
   }
 
@@ -102,9 +102,9 @@ module.exports = class blogServices {
       //return response to controller
       return response;
     } catch (err) {
-      //If theres an error, log error to file and return false to controller
+      //If theres an error, log error to file and return 'false' to controller
       logger.info(`Services: Error occured in updating post, ${err.message}`);
-      return false;
+      return "false";
     }
   }
 
@@ -116,9 +116,9 @@ module.exports = class blogServices {
       //Return response to controller
       return response;
     } catch (err) {
-      //If theres an error, log error to file and return false to controller
+      //If theres an error, log error to file and return 'false' to controller
       logger.info(`Services: Error occured in deleting post, ${err.message}`);
-      return false;
+      return "false";
     }
   }
 
@@ -142,11 +142,11 @@ module.exports = class blogServices {
       //return response to the controller
       return response;
     } catch (err) {
-      //If theres an error, log error to file and return false to controller
+      //If theres an error, log error to file and return 'false' to controller
       logger.info(
         `Services: Error occured in adding comment to post, ${err.message}`
       );
-      return false;
+      return "false";
     }
   }
 
@@ -163,11 +163,11 @@ module.exports = class blogServices {
       //return response to controller
       return response;
     } catch (err) {
-      //If theres an error, log error to file and return false to controller
+      //If theres an error, log error to file and return 'false' to controller
       logger.info(
         `Services: Error occured in getting a post comment, ${err.message}`
       );
-      return false;
+      return "false";
     }
   }
 
@@ -188,11 +188,11 @@ module.exports = class blogServices {
       //return response to the controller
       return response;
     } catch (err) {
-      //If theres an error, log error to file and return false to controller
+      //If theres an error, log error to file and return 'false' to controller
       logger.info(
         `Services: Error occured in editing post comment, ${err.message}`
       );
-      return false;
+      return "false";
     }
   }
 
@@ -212,11 +212,11 @@ module.exports = class blogServices {
       //return response to the controller
       return response;
     } catch (err) {
-      //If theres an error, log error to file and return false to controller
+      //If theres an error, log error to file and return 'false' to controller
       logger.info(
         `Services: Error occured in deleting post comment, ${err.message}`
       );
-      return false;
+      return "false";
     }
   }
 };

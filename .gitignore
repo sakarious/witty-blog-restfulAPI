@@ -1,3 +1,4 @@
 node_modules/
 .env
 logger.log
+random.js

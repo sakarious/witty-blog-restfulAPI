@@ -70,8 +70,8 @@ module.exports = class blogController {
 
   static async getAllPosts(req, res) {
     try {
-      if (req.query) {
-        // Check if query object has page and limit
+      if (Object.keys(req.query).length != 0) {
+        //If request query object is not empty, Check if query object has page and limit
         const { error, isValid } = validation.validateQueryObject(req.query);
 
         //If validation fails, send error to user
@@ -103,7 +103,7 @@ module.exports = class blogController {
       let response = await blog.getAllPosts(page, limit);
 
       //If not successful, send json response
-      if (response == false) {
+      if (response === "false") {
         return res.status(500).json({
           code: 500,
           status: "Failed",
@@ -112,9 +112,17 @@ module.exports = class blogController {
       }
 
       //If successful, send json response
-      res
-        .status(200)
-        .json({ code: 200, status: "Success", data: response, error: null });
+      if (response.length != 0) {
+        res
+          .status(200)
+          .json({ code: 200, status: "Success", data: response, error: null });
+      } else {
+        res.status(200).json({
+          code: 200,
+          status: "No Post in Database",
+          message: "No Post in Database,Start Writing.",
+        });
+      }
     } catch (err) {
       //If theres an error, log error to file and return json response
       logger.info(
@@ -137,13 +145,13 @@ module.exports = class blogController {
       let response = await blog.getPostById(id);
 
       //If theres a match, send json response
-      if (response) {
+      if (response !== "false") {
         res
           .status(200)
           .json({ code: 200, status: "Success", data: response, error: null });
       } else {
         res.status(404).json({
-          code: "404",
+          code: 404,
           status: "Post not found",
           message: "Post not found in database",
         });
@@ -197,14 +205,14 @@ module.exports = class blogController {
       //Send to services for processing and await response
       let response = await blog.updatePost(id, title, content);
       //If response is successful, send json response
-      if (response) {
+      if (response !== "false") {
         res
           .status(200)
           .json({ code: 200, status: "Success", data: response, error: null });
       } else {
         //Post to be edited not found
         res.status(404).json({
-          code: "404",
+          code: 404,
           status: "Post not found",
           message: "Post not found in database",
         });
@@ -227,6 +235,8 @@ module.exports = class blogController {
       let id = req.params.id;
       //Send to services and wait for response
       let response = await blog.deletePost(id);
+      console.log(response);
+
       //If successful, send json response
       if (response) {
         res.status(200).json({
@@ -249,7 +259,8 @@ module.exports = class blogController {
       res.status(500).json({
         code: 500,
         message: "Failed",
-        error: "You cannot delete post at the moment",
+        error:
+          "You cannot delete post at the moment. P.S: Check if post ID is valid",
       });
     }
   }
@@ -287,11 +298,20 @@ module.exports = class blogController {
         let response = await blog.addComment(id, username, comment);
 
         //If not successful, send json response
-        if (response == false) {
+        if (response === "false") {
           return res.status(500).json({
             code: 500,
             status: "Failed",
-            message: "You cannot add a comment at the moment",
+            message:
+              "You cannot add a comment at the moment. P.S: Check Post ID",
+          });
+        }
+
+        if (response == null) {
+          return res.status(404).json({
+            code: 404,
+            status: "Not Found",
+            message: "Post to comment to not found in database",
           });
         }
 
@@ -322,19 +342,21 @@ module.exports = class blogController {
       //Send to services and wait for response
       let response = await blog.getComment(postID, commentID);
 
-      //If comment foud, send success json response
-      if (response) {
-        res
-          .status(200)
-          .json({ code: 200, status: "Success", data: response, error: null });
-      } else {
-        //If no comment found, send json response
-        res.status(404).json({
+      console.log(response);
+
+      //If post comment not found
+      if (response.comments.length == 0) {
+        return res.status(404).json({
           code: 404,
-          status: "Post not found",
-          message: "Post not found in database",
+          status: "Post comment not found",
+          message: "Post comment not found in database",
         });
       }
+
+      //If comment foud, send success json response
+      res
+        .status(200)
+        .json({ code: 200, status: "Success", data: response, error: null });
     } catch (err) {
       //If theres an error, log error to file and return json response
       logger.info(
@@ -343,7 +365,8 @@ module.exports = class blogController {
       res.status(500).json({
         code: 500,
         message: "Failed",
-        error: err.message || "You cannot get comment at the moment",
+        error:
+          "You cannot get comment at the moment. P.S: Check Post or Comment ID",
       });
     }
   }
@@ -390,6 +413,16 @@ module.exports = class blogController {
         comment
       );
 
+      //If not successful,from services send json response
+      if (response === "false") {
+        return res.status(500).json({
+          code: 500,
+          status: "Failed",
+          message:
+            "You cannot update a comment at the moment. P.S: Check Post ID or Comment ID",
+        });
+      }
+
       //if found, return json respons
       if (response) {
         res
@@ -426,6 +459,16 @@ module.exports = class blogController {
       //Send to services and await response
       let response = await blog.deleteComment(postID, commentID);
 
+      //If failure is from services, send response
+      if (response === "false") {
+        return res.status(500).json({
+          code: 500,
+          status: "Failed",
+          message:
+            "You cannot delete a comment at the moment. P.S: Check Post ID or Comment ID",
+        });
+      }
+
       //If comment found and deleted successfully
       if (response) {
         res
@@ -435,8 +478,8 @@ module.exports = class blogController {
         //If comment not found
         res.status(404).json({
           code: 404,
-          status: "Post not found",
-          message: "Post not found in database",
+          status: "Post or comment not found",
+          message: "Post or comment not found in database",
         });
       }
     } catch (err) {
