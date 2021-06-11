@@ -112,7 +112,7 @@ API Documentation.md
 
 ```
 
-# PAY SPECIAL ATTENTION TO:
+# Pay Special Attention to:
 
 ## Features
 
@@ -174,7 +174,7 @@ I tried as much as possible to validate data/payloads.
 
 I used the Model-Routes-Controllers-Services Code Structure.
 
-# TO-DO:
+# To-Do:
 
 - Write more tests cases. I definitely didn't cover every scenario in my test. I hope I get to :)
 - Write more comments.
