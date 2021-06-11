@@ -37,7 +37,7 @@ router.get("/post/:postID/:commentID", (req, res) => {
   Blog.getComment(req, res);
 });
 
-// Edit a comment on a Blog Post
+// Update a comment on a Blog Post
 router.put("/post/:postID/:commentID", (req, res) => {
   Blog.editComment(req, res);
 });

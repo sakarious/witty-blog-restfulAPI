@@ -326,6 +326,13 @@ Returns json data of a blog post to the application.
 - **URL and Method**
   `GET http://localhost:3000/api/v1/post/60c0c429fe1d790640760ec0`
 
+- **URL Params**
+  `/post/:id`
+
+  **Required:**
+
+  `PostID :id =[objectID]`
+
 - **Success Response**
 
 ```
@@ -404,12 +411,13 @@ Status 500 Internal Server Error
 
 ---
 
-Update an existing post in the application.
+Update an existing post in the application and returns post to the application
 
 - **URL and Method**
   `PUT http://localhost:3000/api/v1/post/60c0c429fe1d790640760ec0`
 
 - **URL Params**
+  `/post/:id`
 
   **Required:**
 
@@ -418,7 +426,7 @@ Update an existing post in the application.
 - **Request**
 
 ```
-POST http://localhost:3000/api/v1/post/60c0c429fe1d790640760ec0 HTTP/1.1
+PUT http://localhost:3000/api/v1/post/60c0c429fe1d790640760ec0 HTTP/1.1
 Content-Type: application/json
 
 {
@@ -486,6 +494,7 @@ Returns json data of a blog post successfully deleted to the application.
   `DELETE http://localhost:3000/api/v1/post/60c0c429fe1d790640760ec0`
 
 - **URL Params**
+  `/post/:id`
 
   **Required:**
 
@@ -566,12 +575,13 @@ Status 500 Internal Server Error
 
 ---
 
-Adds comment to a blog post in the application.
+Adds comment to a blog post in the application and returns json data of post.
 
 - **URL and Method**
   `POST http://localhost:3000/api/v1/post/60c0c44bfe1d790640760ec1/comment`
 
 - **URL Params**
+  `/post/:postID/comment`
 
   **Required:**
 
@@ -611,13 +621,6 @@ Content-Type: application/json; charset=utf-8
     "title": "Learn How to Learn in 15 mins",
     "content": "In this Post, I will teach you  How to Learn in 15 mins",
     "comments": [
-      {
-        "_id": "60c129e019f9e94e209e0f83",
-        "username": "Garri Boy",
-        "comment": "Updated Comment",
-        "Date": "2021-06-09T20:51:44.531Z",
-        "__v": 0
-      },
       {
         "_id": "60c33011a211530a74e63e60",
         "username": "Sakarious",
@@ -668,7 +671,7 @@ Returns json data of a blog post comment to the application.
   `GET http://localhost:3000/api/v1/post/60c0c44bfe1d790640760ec1/60c33011a211530a74e63e60`
 
 - **URL Params**
-
+  `/post/:postID/:commentID`
   **Required:**
 
   `PostID :postID =[objectID]`
@@ -737,13 +740,13 @@ Status 500 Internal Server Error
 
 ---
 
-Update an existing post comment in the application.
+Update an existing post comment in the application and return json data of post to the application.
 
 - **URL and Method**
   `PUT http://localhost:3000/api/v1/post/60c0c44bfe1d790640760ec1/60c33011a211530a74e63e60`
 
 - **URL Params**
-
+  `/post/:postID/:commentID`
   **Required:**
 
   `PostID :postID =[objectID]`
@@ -821,11 +824,75 @@ Where Post Object is:
 
 ```
 
-
 Possible errors:
 
 | Error code           | Description                                                                                                          |
 | ---------------------|----------------------------------------------------------------------------------------------------------------------|
 |404 Not Found      | Post or comment to be edited cant be found in the database.                                                     |
 |500 Internal Server Error     | Server Error                                                       |
+```
+
+---
+
+### Delete Post Comment
+
+---
+
+Deletes post comment and Returns json data of post to the application.
+
+- **URL and Method**
+  `DELETE http://localhost:3000/api/v1/post/60c0c44bfe1d790640760ec1/60c33011a211530a74e63e60`
+
+- **URL Params**
+  `/post/:postID/:commentID`
+
+  **Required:**
+
+  `PostID :postID =[objectID]`
+  `CommentID :commentID =[objectID]`
+
+- **Success Response**
+
+```
+Status 200 OK
+Content-Type: application/json; charset=utf-8
+
+{
+  "code": 200,
+  "status": "Success",
+  "data": {
+    "_id": "60c0c44bfe1d790640760ec1",
+    "comments": [
+      {
+        "_id": "60c33011a211530a74e63e60",
+        "username": "Sakarious",
+        "comment": "New Comment",
+        "Date": "2021-06-11T09:42:41.429Z",
+        "__v": 0
+      }
+    ]
+  },
+  "error": null
+}
+Where Post Object is:
+
+| Field         			| Type         | Description                                     |
+| --------------|--------------|-------------------------------------------------|
+| _id            			| string       	  |Post unique identifier.
+| comments           		| Array of Object| Post's Comment
+| _id (comments object)  	| string          | A unique identifier for the post deleted.
+| username (comments object)| string          | Username deleted
+| comment (comments object) | string          | User's comment deleted
+| Date (comments object)    | timestamp       | Date comment was posted.
+```
+
+- **Error Response**
+
+```
+Status 500 Internal Server Error
+{
+  "code": 500,
+  "status": "Failed",
+  "message": "You cannot delete a comment at the moment. P.S: Check Post ID or Comment ID"
+}
 ```
